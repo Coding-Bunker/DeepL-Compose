@@ -1,69 +1,51 @@
 package it.github.samuele794.composedeepl.ui.translate
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
-import androidx.compose.material.TextFieldDefaults.textFieldColors
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.runtime.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.Scaffold
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
+import it.github.samuele794.composedeepl.ui.theme.ComposeDeepLTheme
+import it.github.samuele794.composedeepl.viewmodel.TranslationViewModel
 
+@ExperimentalAnimationApi
 @Composable
-fun TranslationComponent() {
-    var text by remember { mutableStateOf("") }
-
-    Card(modifier = Modifier.fillMaxWidth(), elevation = 4.dp) {
-        ConstraintLayout(
+fun TranslationPage(viewModel: TranslationViewModel = viewModel()) {
+    Scaffold(topBar = {
+        TranslateHeader()
+    }) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            val (textRef, clearRef) = createRefs()
-
-            TextField(
-                modifier = Modifier
-                    .constrainAs(textRef) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(clearRef.start)
-                        width = Dimension.fillToConstraints
-                    },
-                value = text,
-                onValueChange = { text = it },
-                colors = textFieldColors(
-                    backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
-            )
-
-            IconButton(
-                modifier = Modifier.constrainAs(clearRef) {
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                },
-                onClick = { text = "" }) {
-                Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+            val translationText = viewModel.translationState.translationText
+            TranslationComponent(translationText) {
+                viewModel.startTranslation(it)
             }
+
+            AnimatedVisibility(
+                visible = viewModel.translationState.loading,
+                Modifier.padding(top = 8.dp)
+            ) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+            Spacer(Modifier.height(16.dp))
+            TranslationResultComponent(textResult = "")
         }
     }
 }
 
-
+@ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable
-fun TranslationComponentPreview() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        TranslationComponent()
+fun TranslationPagePreview() {
+    ComposeDeepLTheme(darkTheme = true) {
+        TranslationPage()
     }
 }

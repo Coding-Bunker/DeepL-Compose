@@ -13,3 +13,12 @@ class AppModule {
     @Provides
     fun provideDeepLRepository() = DeepLRepository()
 }
+
+//@Module
+//@InstallIn(ViewModelComponent::class)
+//class ViewModelModule {
+//
+//    @Provides
+//    fun provideTranslationViewmodel(repository: DeepLRepository) =
+//        TranslationViewModel(repository)
+//}

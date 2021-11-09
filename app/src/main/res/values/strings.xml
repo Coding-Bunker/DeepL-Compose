@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ComposeDeepL</string>
+    <string name="enter_text_hint">Insert text for translation</string>
 </resources>
