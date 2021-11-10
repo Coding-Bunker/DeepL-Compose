@@ -9,11 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import it.github.samuele794.composedeepl.repository.DeepLRepository
 import it.github.samuele794.composedeepl.ui.theme.ComposeDeepLTheme
 import it.github.samuele794.composedeepl.viewmodel.TranslationViewModel
 
-@ExperimentalAnimationApi
+
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TranslationPage(viewModel: TranslationViewModel = viewModel()) {
     Scaffold(topBar = {
@@ -25,9 +28,14 @@ fun TranslationPage(viewModel: TranslationViewModel = viewModel()) {
                 .padding(16.dp)
         ) {
             val translationText = viewModel.translationState.translationText
-            TranslationComponent(translationText) {
-                viewModel.startTranslation(it)
-            }
+            TranslationComponent(
+                translationText = translationText,
+                reproduceEnabled = false,
+                onTranslationChanged = {
+                    viewModel.startTranslation(it)
+                }, reproduceClicked = {
+
+                })
 
             AnimatedVisibility(
                 visible = viewModel.translationState.loading,
@@ -46,6 +54,6 @@ fun TranslationPage(viewModel: TranslationViewModel = viewModel()) {
 @Composable
 fun TranslationPagePreview() {
     ComposeDeepLTheme(darkTheme = true) {
-        TranslationPage()
+        TranslationPage(TranslationViewModel(SavedStateHandle(), DeepLRepository()))
     }
 }

@@ -3,16 +3,11 @@ package it.github.samuele794.composedeepl.ui.translate
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.VolumeUp
-import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 
 @Composable
 fun TranslationResultComponent(textResult: String) {
@@ -22,37 +17,22 @@ fun TranslationResultComponent(textResult: String) {
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
         ) {
             SelectionContainer(
                 Modifier
+                    .fillMaxWidth()
                     .defaultMinSize(minHeight = 150.dp)
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp)
             ) {
                 Text(text = textResult)
             }
             Spacer(modifier = Modifier.height(4.dp))
-            ConstraintLayout(
-                modifier = Modifier
-                    .fillMaxWidth()
+            TranslationAction(
+                reproduceEnabled = false,
+                onReproduceClicked = { /*TODO*/ },
             ) {
-                val (sound, microphone, photo, document) = createRefs()
 
-                Icon(
-                    imageVector = Icons.Filled.VolumeUp, contentDescription = "",
-                    modifier = Modifier.constrainAs(sound) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                    }
-                )
-
-                Icon(
-                    imageVector = Icons.Outlined.Mic,
-                    contentDescription = "",
-                    modifier = Modifier.constrainAs(microphone) {
-                        top.linkTo(parent.top)
-                        end.linkTo(parent.end)
-                    }
-                )
             }
         }
     }

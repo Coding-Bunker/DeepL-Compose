@@ -19,7 +19,7 @@ data class TranslationState(
 
 @HiltViewModel
 class TranslationViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     repository: DeepLRepository
 ) : ViewModel() {
     var translationState: TranslationState by mutableStateOf(

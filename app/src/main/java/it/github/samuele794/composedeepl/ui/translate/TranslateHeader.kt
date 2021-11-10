@@ -3,16 +3,18 @@ package it.github.samuele794.composedeepl.ui.translate
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.MotionLayout
 import it.github.samuele794.composedeepl.ui.theme.ComposeDeepLTheme
@@ -40,21 +42,27 @@ fun TranslateHeader() {
             end = switchConstraintSetDeActive(),
             progress = progress,
             modifier = Modifier
+                .padding(horizontal = 16.dp)
                 .fillMaxWidth()
 //                .background(backgroundColor)
         ) {
 
-            Icon(
-                imageVector = Icons.Filled.SwapHoriz,
-                contentDescription = null,
-//                tint = contentColorFor(backgroundColor = backgroundColor),
+            IconButton(
+                onClick = {
+                    isSwaped = !isSwaped
+                },
                 modifier = Modifier
                     .layoutId("switch")
                     .rotate(rotationProgress)
-                    .clickable {
-                        isSwaped = !isSwaped
+                    .pointerInput(Unit) {
+//                        size = IntSize(24.dp.roundToPx(), 24.dp.roundToPx())
                     }
-            )
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.SwapHoriz,
+                    contentDescription = null,
+                )
+            }
 
             TextButton(
                 onClick = { /*TODO*/ },

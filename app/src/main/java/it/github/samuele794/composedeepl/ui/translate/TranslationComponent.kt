@@ -1,13 +1,13 @@
 package it.github.samuele794.composedeepl.ui.translate
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.TextFieldDefaults.textFieldColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.outlined.DocumentScanner
+import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,10 +19,25 @@ import androidx.constraintlayout.compose.Dimension
 import it.github.samuele794.composedeepl.R
 
 @Composable
-fun TranslationComponent(translationText: String, onTranslationChanged: (String) -> Unit) {
+fun TranslationComponent(
+    translationText: String,
+    onTranslationChanged: (String) -> Unit,
+    reproduceEnabled: Boolean,
+    reproduceClicked: () -> Unit
+) {
     Card(modifier = Modifier.fillMaxWidth(), elevation = 2.dp) {
         Column {
             EditableClearComponent(translationText, onTranslationChanged)
+            TranslationAction(
+                reproduceEnabled = reproduceEnabled,
+                onReproduceClicked = reproduceClicked
+            ) {
+                Icon(imageVector = Icons.Outlined.DocumentScanner, contentDescription = null)
+                Spacer(modifier = Modifier.width(16.dp))
+                Icon(imageVector = Icons.Outlined.Image, contentDescription = null)
+                Spacer(modifier = Modifier.width(16.dp))
+                Icon(imageVector = Icons.Outlined.Mic, contentDescription = null)
+            }
         }
     }
 }
@@ -75,8 +90,11 @@ fun TranslationComponentPreview() {
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        TranslationComponent("Test") {
-
-        }
+        TranslationComponent(
+            translationText = "Test",
+            onTranslationChanged = { },
+            reproduceEnabled = false,
+            reproduceClicked = {}
+        )
     }
 }
