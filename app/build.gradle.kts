@@ -7,6 +7,7 @@ plugins {
     kotlin("plugin.serialization") version "1.5.31"
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("org.jetbrains.kotlinx.kover") version "0.4.1"
 }
 
 val composeVersion = "1.0.4"
@@ -67,6 +68,30 @@ android {
     packagingOptions {
         resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
     }
+    testOptions {
+        unitTests.all {
+            if (it.name == "testDebugUnitTest") {
+                it.extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
+                    isEnabled = true
+                    binaryReportFile.set(file("$buildDir/custom/debug-report.bin"))
+                    includes = listOf("it\\.github\\.samuele794\\.composedeepl\\..*")
+                }
+            }
+        }
+    }
+}
+
+kover {
+    isEnabled =
+        true                        // false to disable instrumentation of all test tasks in all modules
+    coverageEngine.set(kotlinx.kover.api.CoverageEngine.INTELLIJ) // change instrumentation agent and reporter
+//    intellijEngineVersion.set("1.0.614")    // change version of IntelliJ agent and reporter
+//    jacocoEngineVersion.set("0.8.7")        // change version of JaCoCo agent and reporter
+    generateReportOnCheck.set(true)         // false to do not execute `koverReport` task before `check` task
+}
+
+tasks.koverHtmlReport {
+    isEnabled = true
 }
 
 dependencies {
