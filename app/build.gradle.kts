@@ -96,6 +96,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:${ktorVersion}")
     implementation("io.ktor:ktor-client-serialization:${ktorVersion}")
     implementation("io.ktor:ktor-client-logging:${ktorVersion}")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
 
     //NAVIGATION
     implementation("androidx.navigation:navigation-compose:2.4.0-beta01")

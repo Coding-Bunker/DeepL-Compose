@@ -17,29 +17,53 @@ data class TranslationState(
     var loading: Boolean = false
 )
 
+interface TranslationViewModel {
+    var translationState: TranslationState
+
+    fun startTranslation(text: String)
+    fun getLanguages()
+}
+
 @HiltViewModel
-class TranslationViewModel @Inject constructor(
+class TranslationViewModelImpl @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    repository: DeepLRepository
-) : ViewModel() {
-    var translationState: TranslationState by mutableStateOf(
+    private val repository: DeepLRepository
+) : ViewModel(), TranslationViewModel {
+    override var translationState: TranslationState by mutableStateOf(
         savedStateHandle["translationState"] ?: TranslationState()
     )
-        private set
 
-    fun startTranslation(text: String) {
+    override fun startTranslation(text: String) {
         translationState = translationState.copy(translationText = text)
         if (translationState.translationText.isNotBlank()) {
             viewModelScope.coroutineContext.cancelChildren()
-            Log.i(TranslationViewModel::class.simpleName, "Translation Request Launch")
+            translationState = translationState.copy(loading = true)
+            Log.i(TranslationViewModelImpl::class.simpleName, "Translation Request Launch")
             viewModelScope.launch(Dispatchers.IO) {
-                Log.i(TranslationViewModel::class.simpleName, "Translation Request Delay")
                 delay(DIGITATION_DELAY)
                 ensureActive()
-                Log.i(TranslationViewModel::class.simpleName, "Translation Request Started")
-                translationState = translationState.copy(loading = true)
-                delay(DIGITATION_DELAY)
-                translationState = translationState.copy(loading = false)
+                Log.i(TranslationViewModelImpl::class.simpleName, "Translation Request Started")
+
+            }
+        }
+    }
+
+    override fun getLanguages() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val sourceLanguage = async {
+                repository.getSourceLanguages()
+            }
+
+            val targetLanguage = async {
+                repository.getTargetLanguages()
+            }
+
+            kotlin.runCatching {
+                sourceLanguage.await() to targetLanguage.await()
+            }.onSuccess {
+                it
+
+            }.onFailure {
 
             }
         }
